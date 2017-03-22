@@ -9,8 +9,8 @@ GaugeStyle {
     }
 
     background: Rectangle {
-        implicitWidth: 85
-        color: "#262626"
+        implicitWidth: 75
+        color: "#3e3e3e"
     }
 
     minorTickmark: null
@@ -18,7 +18,7 @@ GaugeStyle {
     foreground: null
 
     tickmark: Item {
-        implicitWidth: 85
+        implicitWidth: 75
         implicitHeight: 2
 
         Rectangle {

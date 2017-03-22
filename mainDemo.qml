@@ -32,7 +32,7 @@ Window {
             running: true
             repeat: true
             interval: 4000
-            //onTriggered: tachGauge.value = tachGauge.value == tachGauge.maximumValue ? 0 : tachGauge.maximumValue
+            onTriggered: tachGauge.value = tachGauge.value == tachGauge.maximumValue ? 0 : tachGauge.maximumValue
         }
 
         // Animation for Fuel Gauge.
@@ -43,6 +43,24 @@ Window {
             onTriggered: fuelGauge.value = fuelGauge.value == fuelGauge.maximumValue ? 0 : fuelGauge.maximumValue
         }
 
+        // Animation for Coolant Temp Gauge.
+        Timer {
+            running: true
+            repeat: true
+            interval: 4500
+            onTriggered: coolantTempGauge.value = coolantTempGauge.value == coolantTempGauge.maximumValue ? 0 : coolantTempGauge.maximumValue
+        }
+
+        // Animation for Oil Temp Gauge.
+        Timer {
+            running: true
+            repeat: true
+            interval: 4500
+            onTriggered: oilTempGauge.value = oilTempGauge.value == oilTempGauge.maximumValue ? 0 : oilTempGauge.maximumValue
+        }
+
+
+
         Gauge {
             id: tachGauge
             x: -16
@@ -51,7 +69,7 @@ Window {
             height: 50
             anchors.topMargin: 0
             minimumValue: 0
-            maximumValue: 10000
+            maximumValue: 9000
             tickmarkStepSize: 75
             value: 0
             orientation: Qt.Horizontal
@@ -79,19 +97,21 @@ Window {
             font.pixelSize: 36
         }
 
+/****************** FUEL GAUGE ******************/
+
         Gauge {
             id: fuelGauge
-            x: -20
+            x: 0
             y: 441
-            width: 31
+            width: 185
             style: FuelGaugeStyle {}
-            height: 44
-            anchors.verticalCenterOffset: 219
+            height: 7
+            anchors.verticalCenterOffset: 220
             minimumValue: 0
             maximumValue: 100
             tickmarkStepSize: 25
             value: 0
-            orientation: Qt.Vertical
+            orientation: Qt.Horizontal
             anchors.verticalCenter: parent.verticalCenter
 
             Behavior on value {
@@ -101,75 +121,172 @@ Window {
             }
         }
 
-        Text {
-            id: txtFuel
-            x: 60
-            y: 437
-            width: 76
-            height: 32
-            color: fuelGauge.value <= 20 ? "#ff0000" : "#fff"
-            text: Math.ceil(fuelGauge.value) + "%"
-            style: Text.Normal
-            verticalAlignment: Text.AlignTop
-            styleColor: "#000000"
-            horizontalAlignment: Text.AlignRight
-            font.pixelSize: 36
+        Rectangle {
+            id: rectFuel
+            x: fuelGauge.x + 13
+            y: fuelGauge.y + 11
+            width: Math.ceil(fuelGauge.width) / 4 - 25
+            height: fuelGauge.height
+            color: "#ff311a" // red
         }
 
         Image {
             id: imgFuel
-            x: 0
-            y: 444
-            width: 33
-            height: 30
-            source: "../images/fuel_gauge.png"
-        }
-
-        Image {
-            id: imgCoolant
-            x: 668
-            y: 445
-            width: 33
-            height: 30
-            z: 1
-            source: "../images/coolant_icon.png"
-        }
-
-        Rectangle {
-            id: rectCoolant
-            x: 668
-            y: 445
-            width: 33
-            height: 30
-            color: CF.getCoolantTempColor((fuelGauge.value*1.2))
-            border.width: 0
-            border.color: "#00000000"
+            x: fuelGauge.x + (width / 2)
+            y: fuelGauge.y - height - 4
+            width: 28
+            height: 25
+            source: "../images/fuel_icon.png"
         }
 
         Text {
-            id: txtCoolant
-            x: 702
-            y: 437
-            width: 98
-            height: 46
-            color: CF.getCoolantTempColor((fuelGauge.value*1.3))
-            text: Math.ceil((fuelGauge.value*1.3)) + "C"
-            horizontalAlignment: Text.AlignRight
+            id: txtFuel
+            x: 115
+            y: 424
+            width: 76
+            height: 32
+            color: fuelGauge.value <= 20 ? "#ff0000" : "#fff"
+            text: Math.ceil(fuelGauge.value) + '<font size="1">%</font>'
             style: Text.Normal
-            styleColor: "#000000"
-            font.pixelSize: 36
             verticalAlignment: Text.AlignTop
+            styleColor: "#000000"
+            horizontalAlignment: Text.AlignRight
+            font.pixelSize: 28
+        }
+
+/****************** COOLANT TEMP GAUGE ******************/
+
+        Gauge {
+            id: coolantTempGauge
+            x: 607
+            y: 420
+            width: 185
+            style: TempGaugeStyle {}
+            height: 7
+            anchors.verticalCenterOffset: 153
+            minimumValue: 50
+            maximumValue: 140
+            tickmarkStepSize: (maximumValue - minimumValue) / 4
+            value: 0
+            orientation: Qt.Horizontal
+            anchors.verticalCenter: parent.verticalCenter
+
+            Behavior on value {
+                NumberAnimation {
+                    duration: 4000
+                }
+            }
+        }
+
+        Rectangle {
+            id: rectCoolantTempLow
+            x: coolantTempGauge.x + 13
+            y: coolantTempGauge.y + 11
+            width: Math.ceil(coolantTempGauge.width) / 4 - 25
+            height: coolantTempGauge.height
+            color: "#4286f4" // blue
+        }
+
+        Rectangle {
+            id: rectCoolantTempHigh
+            x: rectCoolantTempLow.x + coolantTempGauge.width - (width * 2) - 6
+            y: rectCoolantTempLow.y
+            width: Math.ceil(coolantTempGauge.width) / 4 - 25
+            height: coolantTempGauge.height
+            color: "#ff311a" // red
         }
 
         Image {
-            id: imgTachMask
-            x: -1
-            y: 0
-            width: 802
-            height: 77
-            z: 1
-            source: "../images/tachometer_mask.png"
+            id: imgCoolantTemp
+            x: coolantTempGauge.x + (width / 2)
+            y: coolantTempGauge.y - height - 4
+            width: 28
+            height: 28
+            source: "../images/coolant_temp_icon.png"
         }
+
+        Text {
+            id: txtCoolantTemp
+            x: 692
+            y: 357
+            width: 98
+            height: 46
+            color: CF.getCoolantTempColor(coolantTempGauge.value)
+            text: Math.ceil(coolantTempGauge.value) + '<font size="1">C</font>'
+            horizontalAlignment: Text.AlignRight
+            style: Text.Normal
+            styleColor: "#000000"
+            font.pixelSize: 28
+            verticalAlignment: Text.AlignTop
+        }
+
+/****************** OIL TEMP GAUGE ******************/
+
+        Gauge {
+            id: oilTempGauge
+            x: 605
+            y: 200
+            width: 185
+            style: TempGaugeStyle {}
+            height: 7
+            anchors.verticalCenterOffset: 220
+            minimumValue: 50
+            maximumValue: 150
+            tickmarkStepSize: (maximumValue - minimumValue) / 4
+            value: 0
+            orientation: Qt.Horizontal
+            anchors.verticalCenter: parent.verticalCenter
+
+            Behavior on value {
+                NumberAnimation {
+                    duration: 4000
+                }
+            }
+        }
+
+        Rectangle {
+            id: rectOilTempLow
+            x: oilTempGauge.x + 13
+            y: oilTempGauge.y + 11
+            width: Math.ceil(oilTempGauge.width) / 4 - 25
+            height: oilTempGauge.height
+            color: "#4286f4" // blue
+        }
+
+        Rectangle {
+            id: rectOilTempHigh
+            x: rectOilTempLow.x + oilTempGauge.width - (width * 2) - 6
+            y: rectOilTempLow.y
+            width: Math.ceil(oilTempGauge.width) / 4 - 25
+            height: oilTempGauge.height
+            color: "#ff311a" // red
+        }
+
+        Image {
+            id: imgOilTemp
+            x: oilTempGauge.x + (width / 2)
+            y: oilTempGauge.y - height + 4
+            width: 28
+            height: 28
+            source: "../images/oil_temp_icon.png"
+        }
+
+        Text {
+            id: txtOilTemp
+            x: 692
+            y: 424
+            width: 98
+            height: 46
+            color: CF.getCoolantTempColor(oilTempGauge.value)
+            text: Math.ceil(oilTempGauge.value) + '<font size="1">C</font>'
+            horizontalAlignment: Text.AlignRight
+            style: Text.Normal
+            styleColor: "#000000"
+            font.pixelSize: 28
+            verticalAlignment: Text.AlignTop
+        }
+
+/****************** VEHICLE SPEED ******************/
 
         Text {
             id: txtSpeed
@@ -187,17 +304,7 @@ Window {
             verticalAlignment: Text.AlignTop
         }
 
-        Rectangle {
-            id: rectCurLap
-            x: 250
-            y: 222
-            width: 303
-            height: 61
-            color: "#262626"
-            radius: 10
-            border.width: 0
-            border.color: "#262626"
-        }
+/****************** LAP TIMING ******************/
 
         Text {
             id: txtCurLap
