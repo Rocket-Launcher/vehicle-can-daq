@@ -1,6 +1,10 @@
 # vehicle-can-daq
 CAN Bus project for automotive racing data acquisition. 
 
+![DAQ Design](https://c2.staticflickr.com/4/3930/33463991141_50f760d985.jpg)
+
+![DAQ Hardware](https://c2.staticflickr.com/4/3721/33228391716_65c716e27c.jpg)
+
 Software:
 - Linux OS (Raspbian)
 - SocketCAN
@@ -12,9 +16,9 @@ Software:
 
 Hardware:
 - Raspberry Pi 3 Model B
-- CAN Controller/Interface (MCP2515 Microchip)
+- PICAN2 CAN Controller/Interface (MCP2515 Microchip)
 - SMPS (Switch Mode Power Supply)
-- Highspeed GPS (USB)
+- Highspeed GPS
 - 7" Touchscreen Display 800 × 480 
 - DB9 to OBD2 Cable
 - Additional wiring, connectors, header pins, terminators, etc.
@@ -32,7 +36,7 @@ Power, ground, CAN_H, and CAN_L will be retrieved from the OBD2 port (PnP), or f
 Factory vehicles are not equipped with the tools to most effectively monitor and evaluate vehicle performance in high stress driving situations, such as Road Racing. Racing drivers wish to get the most out of their vehicles and personal driving ability. Fast and accurate depictions of signal data is vital. A high speed GPS unit is paramount to gathering proper lap times. Every tenth of a second is extremely important.
 
 # Getting Started
-You will need Qt Creator and the Linux Sockets API: SocketCAN. In additon, you will need to have the supporting hardware and CAN device.
+You will need Qt Creator and the Linux Sockets API: SocketCAN. In additon, you will need to have the supporting hardware and CAN device. Qt 5.8 must be installed on your Pi.
 
 # Need Help?
 If you have questions about getting started with vehicle network interfacing through CAN Bus, or anything pertaining to this project, you can reach me at rmfabac047@gmail.com
