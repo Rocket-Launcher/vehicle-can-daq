@@ -212,7 +212,7 @@ Window {
             width: 98
             height: 46
             color: CF.getCoolantTempColor(coolantTempGauge.value)
-            text: Math.ceil(coolantTempGauge.value) + '<font size="1">C</font>'
+            text: (coolantTempGauge.value > 50) ? Math.ceil(coolantTempGauge.value) + '<font size="1">C</font>' : '0' + '<font size="1">C</font>'
             horizontalAlignment: Text.AlignRight
             style: Text.Normal
             styleColor: "#000000"
@@ -278,7 +278,7 @@ Window {
             width: 98
             height: 46
             color: CF.getCoolantTempColor(oilTempGauge.value)
-            text: Math.ceil(oilTempGauge.value) + '<font size="1">C</font>'
+            text: (oilTempGauge.value > 50) ? Math.ceil(oilTempGauge.value) + '<font size="1">C</font>' : '0' + '<font size="1">C</font>'
             horizontalAlignment: Text.AlignRight
             style: Text.Normal
             styleColor: "#000000"
@@ -295,12 +295,12 @@ Window {
             width: 98
             height: 46
             color: "#fff"
-            text: '<b>68</b>' + '<font size="1"> MPH</font>'
+            text: '<b>' + Math.ceil(fuelGauge.value * 1.8) + '</b>' + '<font size="1"> MPH</font>'
             font.family: "Arial"
             horizontalAlignment: Text.AlignRight
             style: Text.Normal
             styleColor: "#000000"
-            font.pixelSize: 46
+            font.pixelSize: 52
             verticalAlignment: Text.AlignTop
         }
 

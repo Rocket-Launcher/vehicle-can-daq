@@ -248,7 +248,7 @@ Window {
             horizontalAlignment: Text.AlignRight
             style: Text.Normal
             styleColor: "#000000"
-            font.pixelSize: 46
+            font.pixelSize: 52
             verticalAlignment: Text.AlignTop
         }
 

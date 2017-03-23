@@ -1,10 +1,11 @@
 import QtQuick 2.0
 import QtQuick.Controls.Styles 1.4
+import "ColorFormatter.js" as CF
 
 GaugeStyle {
     valueBar: Rectangle {
         implicitWidth: 7
-        color: "#fff"
+        color: CF.getCoolantTempColor(coolantTempGauge.value)
     }
 
     background: Rectangle {
