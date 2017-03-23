@@ -1,4 +1,5 @@
 #include <QGuiApplication>
+#include <QCursor>
 #include <QQmlApplicationEngine>
 #include <QQmlComponent>
 #include <QCanBus>
@@ -8,10 +9,12 @@
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    // Hide mouse curser.
+    QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
 
     // Load gauge UI.
     QQmlEngine engine;
-    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/main.qml")));
+    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/mainDemo.qml")));
     QObject *object = component.create();
     //delete object;
 
