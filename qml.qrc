@@ -2,14 +2,15 @@
     <qresource prefix="/">
         <file>FuelGaugeStyle.qml</file>
         <file>daq.qml</file>
-        <file>TachGaugeStyle.qml</file>
         <file>ColorFormatter.js</file>
         <file>main.qml</file>
         <file>mainDemo.qml</file>
         <file>images/fuel_icon.png</file>
-        <file>TempGaugeStyle.qml</file>
         <file>images/coolant_temp_icon.png</file>
         <file>images/oil_temp_icon.png</file>
         <file>images/track_placeholder.png</file>
+        <file>OilTempGaugeStyle.qml</file>
+        <file>CoolantTempGaugeStyle.qml</file>
+        <file>TachGaugeStyle.qml</file>
     </qresource>
 </RCC>

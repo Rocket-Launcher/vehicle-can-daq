@@ -35,3 +35,17 @@ function getCoolantTempColor(val) {
     return white;
 }
 
+function getOilTempColor(val) {
+    var blue = "#4286f4";
+    var white = "#fff";
+    var red = "#ff311a";
+
+    if(val < 75) {
+        return blue;
+    }
+    else if(val > 125) {
+        return red;
+    }
+
+    return white;
+}
