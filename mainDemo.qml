@@ -161,7 +161,7 @@ Window {
             x: 607
             y: 420
             width: 185
-            style: TempGaugeStyle {}
+            style: CoolantTempGaugeStyle {}
             height: 7
             anchors.verticalCenterOffset: 153
             minimumValue: 50
@@ -227,7 +227,7 @@ Window {
             x: 605
             y: 200
             width: 185
-            style: TempGaugeStyle {}
+            style: OilTempGaugeStyle {}
             height: 7
             anchors.verticalCenterOffset: 220
             minimumValue: 50
@@ -277,7 +277,7 @@ Window {
             y: 424
             width: 98
             height: 46
-            color: CF.getCoolantTempColor(oilTempGauge.value)
+            color: CF.getOilTempColor(oilTempGauge.value)
             text: (oilTempGauge.value > 50) ? Math.ceil(oilTempGauge.value) + '<font size="1">C</font>' : '0' + '<font size="1">C</font>'
             horizontalAlignment: Text.AlignRight
             style: Text.Normal

@@ -121,7 +121,7 @@ Window {
             x: 607
             y: 420
             width: 185
-            style: TempGaugeStyle {}
+            style: CoolantTempGaugeStyle {}
             height: 7
             anchors.verticalCenterOffset: 153
             minimumValue: 50
