@@ -10,5 +10,6 @@
         <file>TempGaugeStyle.qml</file>
         <file>images/coolant_temp_icon.png</file>
         <file>images/oil_temp_icon.png</file>
+        <file>images/track_placeholder.png</file>
     </qresource>
 </RCC>
