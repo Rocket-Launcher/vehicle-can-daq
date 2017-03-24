@@ -59,7 +59,7 @@ Window {
             onTriggered: oilTempGauge.value = oilTempGauge.value == oilTempGauge.maximumValue ? 0 : oilTempGauge.maximumValue
         }
 
-
+/****************** RPM GAUGE ******************/
 
         Gauge {
             id: tachGauge
@@ -290,12 +290,13 @@ Window {
 
         Text {
             id: txtSpeed
-            x: 400
+            x: 373
             y: 304
-            width: 98
-            height: 46
+            width: 125
+            height: 61
             color: "#fff"
-            text: '<b>' + Math.ceil(fuelGauge.value * 1.8) + '</b>' + '<font size="1"> MPH</font>'
+            text: "<b>0</b><font size=\"1\"> MPH</font>"
+            z: 1
             font.family: "Arial"
             horizontalAlignment: Text.AlignRight
             style: Text.Normal
@@ -310,13 +311,48 @@ Window {
             id: txtCurLap
             x: 264
             y: 223
-            width: 398
+            width: 285
             height: 58
             color: "#fff"
             text: "Current " + '<font size="4"> 0:47.10</font>'
+            z: 1
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             font.pixelSize: 36
+        }
+
+        Image {
+            id: imgTrack
+            x: 8
+            y: 100
+            width: 184
+            height: 285
+            source: "images/track_placeholder.png"
+        }
+
+        Text {
+            id: txtBestLap
+            x: 324
+            y: 151
+            width: 166
+            height: 58
+            color: "#ffffff"
+            text: "Best <font size=\"4\"> 1:50.92</font>"
+            z: 1
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: 24
+            horizontalAlignment: Text.AlignLeft
+        }
+
+        Rectangle {
+            id: rectangle1
+            x: 247
+            y: 221
+            width: 311
+            height: 66
+            color: "#3e3e3e"
+            radius: 7
+            z: 0
         }
     }
 }
