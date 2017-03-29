@@ -1,7 +1,7 @@
 TEMPLATE = app
 
 QT += qml quick \
-    serialbus
+      serialbus
 CONFIG += c++11
 
 SOURCES += main.cpp \
@@ -18,6 +18,7 @@ include(deployment.pri)
 
 HEADERS += \
     candataobject.h \
-    e46canbusframe.h
+    e46canbusframe.h \
+    canframeid.h
 
 DISTFILES +=
