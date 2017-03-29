@@ -295,7 +295,7 @@ Window {
             width: 125
             height: 61
             color: "#fff"
-            text: "<b>0</b><font size=\"1\"> MPH</font>"
+            text: '<b>' + Math.ceil(fuelGauge.value * 1.8) + '</b><font size="1"> MPH</font>'
             z: 1
             font.family: "Arial"
             horizontalAlignment: Text.AlignRight
