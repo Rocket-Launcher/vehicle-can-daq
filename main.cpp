@@ -5,6 +5,19 @@
 #include <QCanBus>
 #include <QCanBusDevice>
 #include "e46canbusframe.h"
+#include "canframeid.h"
+
+QCanBusDevice::Filter setCanFilter(const unsigned short &id)
+{
+    QCanBusDevice::Filter filter;
+
+    filter.frameId = id;
+    filter.frameIdMask = 0x7FFu; // Compare against all 11-bits of frame id.
+    filter.format = QCanBusDevice::Filter::MatchBaseFormat;
+    filter.type = QCanBusFrame::DataFrame;
+
+    return filter;
+}
 
 int main(int argc, char *argv[])
 {
@@ -30,46 +43,15 @@ int main(int argc, char *argv[])
     // Set filters for needed data frames from the CAN bus device.
     if(device->state() == QCanBusDevice::ConnectedState)
     {
-        const unsigned short ENGINE_RPM = 0x316u;
-        // const unsigned short VEHICLE_SPEED = ?;
-        const unsigned short FUEL_LEVEL = 0x613u;
-        const unsigned short COOLANT_TEMP = 0x329u;
-        const unsigned short OIL_TEMP = 0x545u;
-
-        QCanBusDevice::Filter filter;
+        // Apply filters to CAN Bus device.
         QList<QCanBusDevice::Filter> filterList;
 
-        // Filter engine rpm.
-        filter.frameId = ENGINE_RPM;
-        filter.frameIdMask = 0x7FFu; // Compare against all 11-bits of frame id.
-        filter.format = QCanBusDevice::Filter::MatchBaseFormat;
-        filter.type = QCanBusFrame::DataFrame;
-        filterList.append(filter);
+        filterList.append(setCanFilter(E46_ENGINE_RPM));
+        //filterList.append(setCanFilter(E46_VEHICLE_SPEED));
+        filterList.append(setCanFilter(E46_FUEL_LEVEL));
+        filterList.append(setCanFilter(E46_COOLANT_TEMP));
+        filterList.append(setCanFilter(E46_OIL_TEMP));
 
-        // Filter vehicle speed
-
-        // Filter fuel level
-        filter.frameId = FUEL_LEVEL;
-        filter.frameIdMask = 0x7FFu; // Compare against all 11-bits of frame id.
-        filter.format = QCanBusDevice::Filter::MatchBaseFormat;
-        filter.type = QCanBusFrame::DataFrame;
-        filterList.append(filter);
-
-        // Filter coolant temp
-        filter.frameId = COOLANT_TEMP;
-        filter.frameIdMask = 0x7FFu; // Compare against all 11-bits of frame id.
-        filter.format = QCanBusDevice::Filter::MatchBaseFormat;
-        filter.type = QCanBusFrame::DataFrame;
-        filterList.append(filter);
-
-        // Filter oil temp
-        filter.frameId = OIL_TEMP;
-        filter.frameIdMask = 0x7FFu; // Compare against all 11-bits of frame id.
-        filter.format = QCanBusDevice::Filter::MatchBaseFormat;
-        filter.type = QCanBusFrame::DataFrame;
-        filterList.append(filter);
-
-        // Apply filter to CAN Bus device.
         device->setConfigurationParameter(QCanBusDevice::RawFilterKey, QVariant::fromValue(filterList));
 
         // Read frames and push decoded data to appropriate gauge for display.
@@ -77,25 +59,28 @@ int main(int argc, char *argv[])
         {
             E46CanBusFrame canFrame(device->readFrame().frameId(), device->readFrame().payload());
 
-            switch(canFrame.frameId())
+            if(canFrame.isValid())
             {
-            case ENGINE_RPM:
-                object->setProperty("rpmValue", canFrame.decodeEngineRpm(canFrame.payload()));
-                break;
-            /*case VEHICLE_SPEED:
-                object->setProperty("speedValue", canFrame.decodeVehicleSpeed(canFrame.payload()));
-                break;*/
-            case FUEL_LEVEL:
-                object->setProperty("fuelValue", canFrame.decodeFuelLevel(canFrame.payload()));
-                break;
-            case COOLANT_TEMP:
-                object->setProperty("coolantValue", canFrame.decodeCoolantTempC(canFrame.payload()));
-                break;
-            case OIL_TEMP:
-                object->setProperty("oilValue", canFrame.decodeOilTempC(canFrame.payload()));
-                break;
-            default:
-                break;
+                switch(canFrame.frameId())
+                {
+                case E46_ENGINE_RPM:
+                    object->setProperty("rpmValue", canFrame.decodeEngineRpm());
+                    break;
+                /*case VEHICLE_SPEED:
+                    object->setProperty("speedValue", canFrame.decodeVehicleSpeed());
+                    break;*/
+                case E46_FUEL_LEVEL:
+                    object->setProperty("fuelValue", canFrame.decodeFuelLevel());
+                    break;
+                case E46_COOLANT_TEMP:
+                    object->setProperty("coolantValue", canFrame.decodeCoolantTempC());
+                    break;
+                case E46_OIL_TEMP:
+                    object->setProperty("oilValue", canFrame.decodeOilTempC());
+                    break;
+                default:
+                    break;
+                }
             }
         }
 
