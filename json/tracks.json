@@ -1,0 +1,52 @@
+{
+	"Heartland Park": {
+		"Track Name": "Heartland Park",
+		"State": "Kansas",
+		"City": "Topeka",
+		"Postal Code": "KS",
+		"Latitude": 38.926946,
+		"Longitude": -95.676724,
+		"Length": 2.5,
+		"Turns": 14
+	},
+	"High Plains Raceway": {
+		"Track Name": "High Plains Raceway",
+		"State": "Colorado",
+		"City": "Deer Trail",
+		"Postal Code": "CO",
+		"Latitude": 39.734947,
+		"Longitude": -103.893971,
+		"Length": 2.55,
+		"Turns": 15
+	},
+	"Raceway Park of The Midlands": {
+		"Track Name": "Raceway Park of The Midlands",
+		"State": "Iowa",
+		"City": "Pacific Junction",
+		"Postal Code": "IA",
+		"Latitude": 41.02452,
+		"Longitude": -95.821359,
+		"Length": 2.23,
+		"Turns": 15
+	},
+	"Road Atlanta": {
+		"Track Name": "Road Atlanta",
+		"State": "Georgia",
+		"City": "Braselton",
+		"Postal Code": "GA",
+		"Latitude": 34.150383,
+		"Longitude": -83.814232,
+		"Length": 2.54,
+		"Turns": 12
+	},
+	"Sebring International Raceway": {
+		"Track Name": "Sebring International Raceway",
+		"State": "Florida",
+		"City": "Sebring",
+		"Postal Code": "FL",
+		"Latitude": 27.450219,
+		"Longitude": -81.353728,
+		"Length": 3.7,
+		"Turns": 17
+	}
+}
