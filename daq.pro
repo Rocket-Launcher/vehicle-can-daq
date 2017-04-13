@@ -6,7 +6,8 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     candataobject.cpp \
-    e46canbusframe.cpp
+    e46canbusframe.cpp \
+    track.cpp
 
 RESOURCES += qml.qrc
 
@@ -19,6 +20,7 @@ include(deployment.pri)
 HEADERS += \
     candataobject.h \
     e46canbusframe.h \
-    canframeid.h
+    canframeid.h \
+    track.h
 
 DISTFILES +=

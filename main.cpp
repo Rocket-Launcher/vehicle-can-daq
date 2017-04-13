@@ -6,6 +6,53 @@
 #include <QCanBusDevice>
 #include "e46canbusframe.h"
 #include "canframeid.h"
+#include "track.h"
+#include <iostream>
+
+using namespace std;
+
+QJsonDocument readJson(const QString &filePath) {
+    // Read JSON file to QString object.
+    QJsonDocument jsonDoc;
+    QString contents;
+    QFile file(filePath);
+    if(file.exists()) {
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        contents = file.readAll();
+        file.close();
+    }
+    else {
+        jsonDoc = QJsonDocument();
+        return jsonDoc;
+    }
+
+    // Create JSON document from QString.
+    jsonDoc = QJsonDocument::fromJson(contents.toUtf8());
+
+    return jsonDoc;
+}
+
+QJsonObject toJsonObject(const QJsonDocument &jsonDoc, const QString &trackName) {
+
+    // Create JSON object from specified item (name of track).
+    QJsonObject jsonObj;
+
+    if(!jsonDoc.isEmpty())
+        jsonObj = jsonDoc.object();
+    else {
+        jsonObj = QJsonObject();
+        return jsonObj;
+    }
+
+    if(jsonObj.contains(trackName)) {
+        jsonObj = jsonObj.value(trackName).toObject();
+    }
+    else {
+        jsonObj = QJsonObject();
+    }
+
+    return jsonObj;
+}
 
 QCanBusDevice::Filter setCanFilter(const unsigned short &id)
 {
@@ -29,62 +76,82 @@ int main(int argc, char *argv[])
     QQmlEngine engine;
     QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/mainDemo.qml")));
     QObject *object = component.create();
-    //delete object;
 
-    // Create CAN bus device and connect to can0 via SocketCAN plugin.
-    QCanBusDevice *device;
+/***************************** Lap Timing and Geolocation functionality *****************************/
+
+    // Read JSON document from file path.
+    QJsonDocument jsonDoc = readJson(QCoreApplication::applicationDirPath() + QDir::separator() + "tracks.json");
+
+    // Create C++ JSON Object with item specified from the document.
+    QJsonObject jsonObj = toJsonObject(jsonDoc, "Road Atlanta");
+
+    // Create Track object containing all relevant racetrack information.
+    Track track(jsonObj);
+
+    if(track.trackFound()) {
+        cout << "Track Found" << endl;
+        cout << track.toString() << endl;
+    }
+    else {
+        cout << "Track NOT Found" << endl;
+        cout << track.toString() << endl;
+    }
+
+/************************************** CAN Bus functionality ***************************************/
 
     if(QCanBus::instance()->plugins().contains("socketcan"))
     {
-        device = QCanBus::instance()->createDevice("socketcan", "can0");
+        // Create CAN bus device and connect to can0 via SocketCAN plugin.
+        QCanBusDevice *device = QCanBus::instance()->createDevice("socketcan", "can0");
+
         device->connectDevice();
-    }
 
-    // Set filters for needed data frames from the CAN bus device.
-    if(device->state() == QCanBusDevice::ConnectedState)
-    {
-        // Apply filters to CAN Bus device.
-        QList<QCanBusDevice::Filter> filterList;
-
-        filterList.append(setCanFilter(E46_ENGINE_RPM));
-        //filterList.append(setCanFilter(E46_VEHICLE_SPEED));
-        filterList.append(setCanFilter(E46_FUEL_LEVEL));
-        filterList.append(setCanFilter(E46_COOLANT_TEMP));
-        filterList.append(setCanFilter(E46_OIL_TEMP));
-
-        device->setConfigurationParameter(QCanBusDevice::RawFilterKey, QVariant::fromValue(filterList));
-
-        // Read frames and push decoded data to appropriate gauge for display.
-        while(device->framesAvailable() > 0 && device->state() == QCanBusDevice::ConnectedState)
+        // Set filters for needed data frames from the CAN bus device.
+        if(device->state() == QCanBusDevice::ConnectedState)
         {
-            E46CanBusFrame canFrame(device->readFrame().frameId(), device->readFrame().payload());
+            // Apply filters to CAN Bus device.
+            QList<QCanBusDevice::Filter> filterList;
 
-            if(canFrame.isValid())
+            filterList.append(setCanFilter(E46_ENGINE_RPM));
+            //filterList.append(setCanFilter(E46_VEHICLE_SPEED));
+            filterList.append(setCanFilter(E46_FUEL_LEVEL));
+            filterList.append(setCanFilter(E46_COOLANT_TEMP));
+            filterList.append(setCanFilter(E46_OIL_TEMP));
+
+            device->setConfigurationParameter(QCanBusDevice::RawFilterKey, QVariant::fromValue(filterList));
+
+            // Read frames and push decoded data to appropriate gauge for display.
+            while(device->framesAvailable() > 0 && device->state() == QCanBusDevice::ConnectedState)
             {
-                switch(canFrame.frameId())
+                E46CanBusFrame canFrame(device->readFrame().frameId(), device->readFrame().payload());
+
+                if(canFrame.isValid())
                 {
-                case E46_ENGINE_RPM:
-                    object->setProperty("rpmValue", canFrame.decodeEngineRpm());
-                    break;
-                /*case VEHICLE_SPEED:
-                    object->setProperty("speedValue", canFrame.decodeVehicleSpeed());
-                    break;*/
-                case E46_FUEL_LEVEL:
-                    object->setProperty("fuelValue", canFrame.decodeFuelLevel());
-                    break;
-                case E46_COOLANT_TEMP:
-                    object->setProperty("coolantValue", canFrame.decodeCoolantTempC());
-                    break;
-                case E46_OIL_TEMP:
-                    object->setProperty("oilValue", canFrame.decodeOilTempC());
-                    break;
-                default:
-                    break;
+                    switch(canFrame.frameId())
+                    {
+                    case E46_ENGINE_RPM:
+                        object->setProperty("rpmValue", canFrame.decodeEngineRpm());
+                        break;
+                    /*case VEHICLE_SPEED:
+                        object->setProperty("speedValue", canFrame.decodeVehicleSpeed());
+                        break;*/
+                    case E46_FUEL_LEVEL:
+                        object->setProperty("fuelValue", canFrame.decodeFuelLevel());
+                        break;
+                    case E46_COOLANT_TEMP:
+                        object->setProperty("coolantValue", canFrame.decodeCoolantTempC());
+                        break;
+                    case E46_OIL_TEMP:
+                        object->setProperty("oilValue", canFrame.decodeOilTempC());
+                        break;
+                    default:
+                        break;
+                    }
                 }
             }
-        }
 
-        delete device;
+            delete device;
+        }
     }
 
     return app.exec();
