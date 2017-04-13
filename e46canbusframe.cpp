@@ -55,7 +55,7 @@ unsigned short E46CanBusFrame::decodeVehicleSpeed() const
 unsigned short E46CanBusFrame::decodeFuelLevel() const
 {
     /*
-    Unit: Liters
+    Unit: Liters -> Percent (%)
     CAN Id: 0x613 (1555)
     Conversion: B2
     Note: B2 is fuel level. Full being hex 39. Fuel light comes on at hex 8.
@@ -64,12 +64,13 @@ unsigned short E46CanBusFrame::decodeFuelLevel() const
     if(frameId() != E46_FUEL_LEVEL)
         return 0;
 
+    const float fuelCapacity = 62.83784;
     unsigned short b2;
     const QByteArray &payload = this->payload();
 
     b2 = payload[1];
 
-    return b2;
+    return (b2 / fuelCapacity) * 100;
 }
 
 short E46CanBusFrame::decodeCoolantTempC() const
