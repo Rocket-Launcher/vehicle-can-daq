@@ -133,6 +133,11 @@ int main(int argc, char *argv[])
 
             device->setConfigurationParameter(QCanBusDevice::RawFilterKey, QVariant::fromValue(filterList));
 
+            object->setProperty("frames", device->framesAvailable());
+
+            if(device->state() == QCanBusDevice::ConnectedState)
+                object->setProperty("isConn", "Yes");
+
             // Read frames and push decoded data to appropriate gauge for display.
             while(device->framesAvailable() > 0 && device->state() == QCanBusDevice::ConnectedState)
             {

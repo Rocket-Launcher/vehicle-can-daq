@@ -15,6 +15,8 @@ Window {
     // Test fields for connectivity and values.
     property string connStatus: "Not Connected"
     property string canFilter: "No"
+    property int frames: 0
+    property string isConn: "No"
 
     id: root
     visible: true
@@ -325,6 +327,28 @@ Window {
             height: 23
             color: "#ffffff"
             text: qsTr("CAN: " + connStatus)
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: txtFrames
+            x: 650
+            y: 215
+            width: 142
+            height: 23
+            color: "#ffffff"
+            text: qsTr("Frames: " + frames)
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: txtConn
+            x: 650
+            y: 244
+            width: 142
+            height: 23
+            color: "#ffffff"
+            text: qsTr("Connected: " + isConn)
             font.pixelSize: 12
         }
     }
