@@ -12,6 +12,10 @@ Window {
     property int coolantValue
     property int oilValue
 
+    // Test fields for connectivity and values.
+    property string connStatus: "Not Connected"
+    property string canFilter: "No"
+
     id: root
     visible: true
     width: 800
@@ -181,7 +185,7 @@ Window {
             x: 605
             y: 200
             width: 185
-            style: TempGaugeStyle {}
+            style: OilTempGaugeStyle {}
             height: 7
             anchors.verticalCenterOffset: 220
             minimumValue: 50
@@ -258,13 +262,70 @@ Window {
             id: txtCurLap
             x: 264
             y: 223
-            width: 398
+            width: 285
             height: 58
             color: "#fff"
             text: "Current " + '<font size="4"> 0:47.10</font>'
+            z: 1
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             font.pixelSize: 36
+        }
+
+        Image {
+            id: imgTrack
+            x: 8
+            y: 100
+            width: 184
+            height: 285
+            source: "images/track_placeholder.png"
+        }
+
+        Text {
+            id: txtBestLap
+            x: 324
+            y: 151
+            width: 166
+            height: 58
+            color: "#ffffff"
+            text: "Best <font size=\"4\"> 1:50.92</font>"
+            z: 1
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: 24
+            horizontalAlignment: Text.AlignLeft
+        }
+
+        Rectangle {
+            id: rectangle1
+            x: 247
+            y: 221
+            width: 311
+            height: 66
+            color: "#3e3e3e"
+            radius: 7
+            z: 0
+        }
+
+        Text {
+            id: txtCanFilter
+            x: 650
+            y: 186
+            width: 142
+            height: 23
+            color: "#ffffff"
+            text: qsTr("Filtering: " + canFilter)
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: txtConnStatus
+            x: 650
+            y: 157
+            width: 142
+            height: 23
+            color: "#ffffff"
+            text: qsTr("CAN: " + connStatus)
+            font.pixelSize: 12
         }
     }
 }

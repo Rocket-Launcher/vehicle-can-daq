@@ -4,6 +4,7 @@
 #include <QQmlComponent>
 #include <QCanBus>
 #include <QCanBusDevice>
+#include <QGeoPositionInfoSource>   // <-- Geo Positioning
 #include "e46canbusframe.h"
 #include "canframeid.h"
 #include "track.h"
@@ -74,7 +75,7 @@ int main(int argc, char *argv[])
 
     // Load gauge UI.
     QQmlEngine engine;
-    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/mainDemo.qml")));
+    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/main.qml")));
     QObject *object = component.create();
 
 /***************************** Lap Timing and Geolocation functionality *****************************/
@@ -97,6 +98,16 @@ int main(int argc, char *argv[])
         cout << track.toString() << endl;
     }
 
+    /*QGeoPositionInfoSource *source = QGeoPositionInfoSource::createDefaultSource(0);
+    if(source)
+        source->minimumUpdateInterval();
+
+    QGeoPositionInfo gpi = source->lastKnownPosition();
+    QGeoCoordinate gc = gpi.coordinate();
+
+    cout << gc.toString().toStdString() << endl;
+    cout << source->availableSources();*/
+
 /************************************** CAN Bus functionality ***************************************/
 
     if(QCanBus::instance()->plugins().contains("socketcan"))
@@ -109,6 +120,8 @@ int main(int argc, char *argv[])
         // Set filters for needed data frames from the CAN bus device.
         if(device->state() == QCanBusDevice::ConnectedState)
         {
+            object->setProperty("connStatus", "Connected");
+
             // Apply filters to CAN Bus device.
             QList<QCanBusDevice::Filter> filterList;
 
@@ -123,6 +136,8 @@ int main(int argc, char *argv[])
             // Read frames and push decoded data to appropriate gauge for display.
             while(device->framesAvailable() > 0 && device->state() == QCanBusDevice::ConnectedState)
             {
+                object->setProperty("canFilter", "Yes");
+
                 E46CanBusFrame canFrame(device->readFrame().frameId(), device->readFrame().payload());
 
                 if(canFrame.isValid())
