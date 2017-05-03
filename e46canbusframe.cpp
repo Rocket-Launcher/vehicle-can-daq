@@ -70,7 +70,7 @@ unsigned short E46CanBusFrame::decodeFuelLevel() const
 
     b2 = payload[1];
 
-    return (b2 / fuelCapacity) * 100;
+    return ((b2 / fuelCapacity) / 2) * 100;
 }
 
 short E46CanBusFrame::decodeCoolantTempC() const
