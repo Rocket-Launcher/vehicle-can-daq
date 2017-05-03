@@ -12,6 +12,10 @@
 
 using namespace std;
 
+// Global.
+QObject *object;
+QCanBusDevice *device;
+
 QJsonDocument readJson(const QString &filePath) {
     // Read JSON file to QString object.
     QJsonDocument jsonDoc;
@@ -67,6 +71,43 @@ QCanBusDevice::Filter setCanFilter(const unsigned short &id)
     return filter;
 }
 
+void checkFrames()
+{
+    // Read frames.
+    while(device->framesAvailable() > 0)
+    {
+        object->setProperty("canFilter", "Yes");
+        object->setProperty("frames", device->framesAvailable());
+
+        QCanBusFrame frame = device->readFrame();
+        E46CanBusFrame canFrame(frame.frameId(), frame.payload());
+
+        if(canFrame.isValid())
+        {
+            switch(canFrame.frameId())
+            {
+                case E46_ENGINE_RPM:
+                    object->setProperty("rpmValue", canFrame.decodeEngineRpm());
+                    break;
+                /*case VEHICLE_SPEED:
+                    object->setProperty("speedValue", canFrame.decodeVehicleSpeed());
+                    break;*/
+                case E46_FUEL_LEVEL:
+                    object->setProperty("fuelValue", canFrame.decodeFuelLevel());
+                    break;
+                case E46_COOLANT_TEMP:
+                    object->setProperty("coolantValue", canFrame.decodeCoolantTempC());
+                    break;
+                case E46_OIL_TEMP:
+                    object->setProperty("oilValue", canFrame.decodeOilTempC());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -76,7 +117,7 @@ int main(int argc, char *argv[])
     // Load gauge UI.
     QQmlEngine engine;
     QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/main.qml")));
-    QObject *object = component.create();
+    object = component.create();
 
 /***************************** Lap Timing and Geolocation functionality *****************************/
 
@@ -113,7 +154,7 @@ int main(int argc, char *argv[])
     if(QCanBus::instance()->plugins().contains("socketcan"))
     {
         // Create CAN bus device and connect to can0 via SocketCAN plugin.
-        QCanBusDevice *device = QCanBus::instance()->createDevice("socketcan", "can0");
+        device = QCanBus::instance()->createDevice("socketcan", "can0");
 
         device->connectDevice();
 
@@ -133,44 +174,8 @@ int main(int argc, char *argv[])
 
             device->setConfigurationParameter(QCanBusDevice::RawFilterKey, QVariant::fromValue(filterList));
 
-            object->setProperty("frames", device->framesAvailable());
-
-            if(device->state() == QCanBusDevice::ConnectedState)
-                object->setProperty("isConn", "Yes");
-
-            // Read frames and push decoded data to appropriate gauge for display.
-            while(device->framesAvailable() > 0 && device->state() == QCanBusDevice::ConnectedState)
-            {
-                object->setProperty("canFilter", "Yes");
-
-                E46CanBusFrame canFrame(device->readFrame().frameId(), device->readFrame().payload());
-
-                if(canFrame.isValid())
-                {
-                    switch(canFrame.frameId())
-                    {
-                    case E46_ENGINE_RPM:
-                        object->setProperty("rpmValue", canFrame.decodeEngineRpm());
-                        break;
-                    /*case VEHICLE_SPEED:
-                        object->setProperty("speedValue", canFrame.decodeVehicleSpeed());
-                        break;*/
-                    case E46_FUEL_LEVEL:
-                        object->setProperty("fuelValue", canFrame.decodeFuelLevel());
-                        break;
-                    case E46_COOLANT_TEMP:
-                        object->setProperty("coolantValue", canFrame.decodeCoolantTempC());
-                        break;
-                    case E46_OIL_TEMP:
-                        object->setProperty("oilValue", canFrame.decodeOilTempC());
-                        break;
-                    default:
-                        break;
-                    }
-                }
-            }
-
-            delete device;
+            // Connect framesRecieved signal to slot function for reading frames.
+            QObject::connect(device, &QCanBusDevice::framesReceived, checkFrames);
         }
     }
 
