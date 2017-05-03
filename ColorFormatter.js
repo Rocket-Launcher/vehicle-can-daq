@@ -1,8 +1,8 @@
 // Formatter functions to return color values for display of gauges, text, and images.
 
 function getTachColor(val) {
-    var yellowRPM = 7500;
-    var redRPM = 8000;
+    var yellowRPM = 4500; // 7500
+    var redRPM = 5000;    // 7950
     var white = "#fff";
     var yellow = "#fff417";
     var red = "#ff311a";
