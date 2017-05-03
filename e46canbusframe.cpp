@@ -64,13 +64,13 @@ unsigned short E46CanBusFrame::decodeFuelLevel() const
     if(frameId() != E46_FUEL_LEVEL)
         return 0;
 
-    const unsigned short fuelCapacity = 57; //62.83784;
+    const float fuelCapacity = 57.0; //62.83784;
     unsigned short b3;
     const QByteArray &payload = this->payload();
 
     b3 = payload[2];
 
-    return floor((b3 / fuelCapacity) * 100);
+    return (b3 / fuelCapacity) * 100;
 }
 
 short E46CanBusFrame::decodeCoolantTempC() const
