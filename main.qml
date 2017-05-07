@@ -14,9 +14,8 @@ Window {
 
     // Test fields for connectivity and values.
     property string connStatus: "Not Connected"
-    property string canFilter: "No"
     property int frames: 0
-    property string isConn: "No"
+    property string canFilter: "No"
 
     id: root
     visible: true
@@ -41,7 +40,7 @@ Window {
 
         Gauge {
             id: tachGauge
-            x: -16
+            x: -17
             style: TachGaugeStyle {}
             width: 833
             height: 50
@@ -172,7 +171,7 @@ Window {
             width: 98
             height: 46
             color: CF.getCoolantTempColor(coolantTempGauge.value)
-            text: Math.ceil(coolantTempGauge.value) + '<font size="1">C</font>'
+            text: Math.ceil(coolantValue) + '<font size="1">C</font>'
             horizontalAlignment: Text.AlignRight
             style: Text.Normal
             styleColor: "#000000"
@@ -232,7 +231,7 @@ Window {
             width: 98
             height: 46
             color: CF.getCoolantTempColor(oilTempGauge.value)
-            text: Math.ceil(oilTempGauge.value) + '<font size="1">C</font>'
+            text: Math.ceil(oilValue) + '<font size="1">C</font>'
             horizontalAlignment: Text.AlignRight
             style: Text.Normal
             styleColor: "#000000"
@@ -301,7 +300,7 @@ Window {
             id: rectangle1
             x: 247
             y: 221
-            width: 311
+            width: 345
             height: 66
             color: "#3e3e3e"
             radius: 7
@@ -314,8 +313,8 @@ Window {
             y: 186
             width: 142
             height: 23
-            color: "#ffffff"
             text: qsTr("Filtering: " + canFilter)
+            color: (canFilter == "No") ? "red" : "green"
             font.pixelSize: 12
         }
 
@@ -325,8 +324,8 @@ Window {
             y: 157
             width: 142
             height: 23
-            color: "#ffffff"
-            text: qsTr("CAN: " + connStatus)
+            text: qsTr("CAN bus: " + connStatus)
+            color: (connStatus == "Not Connected") ? "red" : "green"
             font.pixelSize: 12
         }
 
@@ -336,19 +335,8 @@ Window {
             y: 215
             width: 142
             height: 23
-            color: "#ffffff"
             text: qsTr("Frames: " + frames)
-            font.pixelSize: 12
-        }
-
-        Text {
-            id: txtConn
-            x: 650
-            y: 244
-            width: 142
-            height: 23
-            color: "#ffffff"
-            text: qsTr("Connected: " + isConn)
+            color: (frames == 0) ? "red" : "green"
             font.pixelSize: 12
         }
     }

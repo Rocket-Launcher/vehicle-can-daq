@@ -2,7 +2,7 @@
 
 function getTachColor(val) {
     var yellowRPM = 7500;
-    var redRPM = 8000;
+    var redRPM = 7900;
     var white = "#fff";
     var yellow = "#fff417";
     var red = "#ff311a";
